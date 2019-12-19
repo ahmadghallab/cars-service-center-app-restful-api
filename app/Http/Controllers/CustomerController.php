@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request; 
 
-use App\MakeModel;
+use App\Customer;
 
-class MakeModelController extends Controller
+class CustomerController extends Controller
 {
   public function __construct()
   {
@@ -17,16 +17,16 @@ class MakeModelController extends Controller
 
   public function index()
   {
-    $makeModels = MakeModel::all();
-    return response()->json($makeModels);
+    $customers = Customer::all();
+    return response()->json($customers);
   }
 
   public function show ($id) 
   {
-    $makeModel = MakeModel::where('id', $id)->first();
+    $customer = Customer::where('id', $id)->first();
 
-    if ($makeModel) {
-      return response()->json($makeModel);
+    if ($customer) {
+      return response()->json($customer);
     }
 
     return response()->json(['message' => 'Not Found.'], 404);
@@ -36,15 +36,15 @@ class MakeModelController extends Controller
   {
     $this->validate($request, [
       'name' => 'required',
-      'make' => 'required'
+      'phone' => 'required'
     ]);
 
     $data = $request->all();
     
-    $makeModel = new MakeModel($data);
+    $customer = new Customer($data);
 
-    if ($makeModel->save()) {
-      return response()->json($makeModel, 201);
+    if ($customer->save()) {
+      return response()->json($customer, 201);
     }
 
     return response()->json(['message' => 'Something went wrong!'], 500);
@@ -54,16 +54,15 @@ class MakeModelController extends Controller
   {
     $this->validate($request, [
       'name' => 'required',
+      'phone' => 'required'
     ]);
   
-    $data = [
-      'name' => $request->input('name')
-    ];
+    $data = $request->all();
 
-    $makeModel = MakeModel::findOrFail($id);
+    $customer = Customer::findOrFail($id);
 
-    if ($makeModel->update($data)) {
-      return response()->json($makeModel);
+    if ($customer->update($data)) {
+      return response()->json($customer);
     }
 
     return response()->json(['message' => 'Something went wrong!'], 500);
@@ -71,9 +70,9 @@ class MakeModelController extends Controller
 
   public function destroy($id)
   {
-    $makeModel = MakeModel::findOrFail($id);
-    if ($makeModel->delete()) {
-      return response()->json(['message' => 'MakeModel deleted.'], 204);
+    $customer = Customer::findOrFail($id);
+    if ($customer->delete()) {
+      return response()->json(['message' => 'Customer deleted.'], 204);
     }
 
     return response()->json(['message' => 'Something went wrong!'], 500);
