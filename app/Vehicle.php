@@ -20,4 +20,14 @@ class Vehicle extends Model
     return $this->belongsTo('App\Customer', 'customer');
   }
 
+  public function make()
+  {
+    return $this->belongsTo('App\Make', 'make');
+  }
+
+  public function make_model()
+  {
+    return $this->belongsTo('App\MakeModel', 'make_model');
+  }
+
 }

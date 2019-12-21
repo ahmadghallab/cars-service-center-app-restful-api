@@ -15,10 +15,19 @@ class VehicleController extends Controller
     // ]);
   }
 
-  public function index()
+  public function index(Request $request)
   {
-    $vehicles = Vehicle::all();
-    return response()->json($vehicles);
+    $vehicles = Vehicle::query()->with(['customer', 'make', 'make_model']);
+
+    if ($request->has('q')) {
+      $q = '%' . $request->input('q') . '%';
+      $vehicles->where('vin', 'like', $q)->orWhere('engine', 'like', $q);
+    }
+
+    $result = $vehicles->orderBy('id', 'DESC')->paginate(50);
+
+
+    return response()->json($result);
   }
 
   public function show ($id) 
