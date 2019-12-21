@@ -15,10 +15,20 @@ class CustomerController extends Controller
     // ]);
   }
 
-  public function index()
+  public function index(Request $request)
   {
-    $customers = Customer::all();
-    return response()->json($customers);
+
+    $customers = Customer::query();
+
+    if ($request->has('q')) {
+      $q = '%' . $request->input('q') . '%';
+      $customers->where('id', 'like', $q)->orWhere('name', 'like', $q)->orWhere('phone', 'like', $q);
+    }
+
+    $result = $customers->orderBy('id', 'DESC')->paginate(50);
+
+
+    return response()->json($result);
   }
 
   public function show ($id) 
